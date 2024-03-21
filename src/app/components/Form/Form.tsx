@@ -1,20 +1,11 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Spinner } from "../Spinner/Spinner";
-import {
-  JoinWaitlistSchema,
-  joinWaitlistSchema,
-} from "@/app/schemas/joinWaitlistSchema";
+import { JoinWaitlistSchema } from "@/app/schemas/joinWaitlistSchema";
+import { Toast } from "../Toast/Toast";
 
 export function Form() {
   const [firstname, setFirstname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [loading, setIsLoading] = useState<boolean>(false);
-
-  let userData: JoinWaitlistSchema = {
-    firstname: firstname,
-    email: email,
-  };
 
   function handleFirstnameChange(event: ChangeEvent<HTMLInputElement>) {
     setFirstname(event.target.value);
@@ -24,10 +15,15 @@ export function Form() {
     setEmail(event.target.value);
   }
 
+  const userData: JoinWaitlistSchema = {
+    firstname: firstname,
+    email: email,
+  };
+
+  const [joinedToWaitlist, setHasJoinedToWaitlist] = useState<boolean>();
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    setIsLoading(true);
 
     try {
       const joinWaitlist = await fetch(
@@ -41,48 +37,61 @@ export function Form() {
         }
       );
 
-      const result = await joinWaitlist.json();
-      console.log(result);
+      await joinWaitlist.json();
 
-      setIsLoading(false);
-    } catch (error) {
-      // todo throw toast error
-    }
+      setHasJoinedToWaitlist(true);
+
+      setTimeout(() => {
+        setHasJoinedToWaitlist(false);
+      }, 2000);
+    } catch (error) {}
   }
 
   return (
-    <form
-      className="flex flex-col"
-      name="Waitlist"
-      method="POST"
-      autoComplete="on"
-      autoFocus
-      onSubmit={handleSubmit}
-    >
-      <input
-        className="rounded-lg w-96 p-3 bg-transparent border border-gray placeholder:text-label text-white outline-none"
-        type="text"
-        id="name"
-        name="name"
-        placeholder="Fulano"
-        value={firstname}
-        onChange={handleFirstnameChange}
-      />
-      <input
-        className="mt-8 rounded-lg w-96 p-3 bg-transparent border border-gray placeholder:text-label text-white outline-none"
-        type="email"
-        id="email"
-        name="email"
-        placeholder="fulano@gmail.com"
-        value={email}
-        onChange={handleEmailChange}
-      />
-      <button
-        className="mt-8 rounded-lg w-96 p-3 bg-blue text-white hover:bg-blueBorder flex justify-center items-center"
-        type="submit"
+    <>
+      {joinedToWaitlist && (
+        <Toast
+          emoji="✅"
+          title="Olá, "
+          firstname={firstname}
+          message="Você foi registrado na waitlist! Em breve, receberá e-mails com nossas novidades."
+          borderColor="border-green"
+        />
+      )}
+
+      <form
+        className="flex flex-col"
+        name="Waitlist"
+        method="POST"
+        autoComplete="on"
+        autoFocus
+        onSubmit={handleSubmit}
       >
-        {loading ? <Spinner /> : `Inscrever-se`}
-      </button>
-    </form>
+        <input
+          className="rounded-lg w-96 p-3 bg-transparent border border-gray placeholder:text-label text-white outline-none"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Fulano"
+          value={firstname}
+          onChange={handleFirstnameChange}
+        />
+        <input
+          className="mt-8 rounded-lg w-96 p-3 bg-transparent border border-gray placeholder:text-label text-white outline-none"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="fulano@gmail.com"
+          value={email}
+          onChange={handleEmailChange}
+        />
+        <button
+          className="mt-8 rounded-lg w-96 p-3 bg-blue text-white hover:bg-blueBorder flex justify-center items-center"
+          type="submit"
+        >
+          Inscrever-se
+        </button>
+      </form>
+    </>
   );
 }
