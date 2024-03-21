@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Form } from "./components/Form/Form";
+import { Footer } from "./components/Footer/Footer";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       </p>
 
       <Form />
+      <Footer />
     </main>
   );
 }
