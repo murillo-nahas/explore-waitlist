@@ -23,6 +23,8 @@ const config: Config = {
         blueGradient: "#2C2CBD",
         blue: "#1C73E8",
         blueBorder: "#4293FF",
+        green: "#46D764",
+        red: "#FF375B",
       },
     },
   },
