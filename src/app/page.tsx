@@ -13,7 +13,7 @@ export default function Home() {
       />
 
       <p className="mt-16 mb-16 text-white text-3xl text-center">
-        Entre na nossa wishlist do <br />
+        Entre na nossa waitlist do <br />
         <span className="font-semibold bg-gradient-to-r from-greenGradient to-blueGradient inline-block text-transparent bg-clip-text">
           Explore!
         </span>
