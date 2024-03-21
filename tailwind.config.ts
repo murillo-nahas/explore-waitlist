@@ -21,6 +21,8 @@ const config: Config = {
         white: "#F6F6F6",
         greenGradient: "#00F0C4",
         blueGradient: "#2C2CBD",
+        blue: "#1C73E8",
+        blueBorder: "#4293FF",
       },
     },
   },
