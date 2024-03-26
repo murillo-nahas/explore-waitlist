@@ -25,6 +25,7 @@ const config: Config = {
         blueBorder: "#4293FF",
         green: "#46D764",
         red: "#FF375B",
+        grayDisabled: "#CCC",
       },
     },
   },
