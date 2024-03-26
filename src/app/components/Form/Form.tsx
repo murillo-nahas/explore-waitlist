@@ -7,6 +7,11 @@ export function Form() {
   const [firstname, setFirstname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
+  const userData: JoinWaitlistSchema = {
+    firstname: firstname,
+    email: email,
+  };
+
   function handleFirstnameChange(event: ChangeEvent<HTMLInputElement>) {
     setFirstname(event.target.value);
   }
@@ -15,12 +20,10 @@ export function Form() {
     setEmail(event.target.value);
   }
 
-  const userData: JoinWaitlistSchema = {
-    firstname: firstname,
-    email: email,
-  };
-
-  const [joinedToWaitlist, setHasJoinedToWaitlist] = useState<boolean>();
+  function handleClearInputs() {
+    setFirstname("");
+    setEmail("");
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,28 +40,23 @@ export function Form() {
         }
       );
 
-      await joinWaitlist.json();
-
-      setHasJoinedToWaitlist(true);
-
       setTimeout(() => {
-        setHasJoinedToWaitlist(false);
-      }, 2000);
+        handleClearInputs();
+      }, 1000);
+
+      await joinWaitlist.json();
     } catch (error) {}
   }
 
   return (
     <>
-      {joinedToWaitlist && (
-        <Toast
-          emoji="✅"
-          title="Olá, "
-          firstname={firstname}
-          message="Você foi registrado na waitlist! Em breve, receberá e-mails com nossas novidades."
-          borderColor="border-green"
-        />
-      )}
-
+      {/* <Toast
+        borderColor="border-green"
+        emoji="✅"
+        title="Olá, "
+        firstname={firstname}
+        message="Você foi registrado com sucesso na nossa waitlist. Fique de olho no seu e-mail para receber novidades!"
+      /> */}
       <form
         className="flex flex-col"
         name="Waitlist"
@@ -72,7 +70,7 @@ export function Form() {
           type="text"
           id="name"
           name="name"
-          placeholder="Fulano"
+          placeholder="Primeiro nome"
           value={firstname}
           onChange={handleFirstnameChange}
         />
@@ -81,12 +79,17 @@ export function Form() {
           type="email"
           id="email"
           name="email"
-          placeholder="fulano@gmail.com"
+          placeholder="Seu melhor e-mail"
           value={email}
           onChange={handleEmailChange}
         />
         <button
-          className="mt-8 rounded-lg w-96 p-3 bg-blue text-white hover:bg-blueBorder flex justify-center items-center"
+          className={`mt-8 rounded-lg w-96 p-3 flex justify-center items-center ${
+            !firstname || !email
+              ? "bg-grayDisabled text-gray cursor-not-allowed"
+              : "bg-blue text-white hover:bg-blueBorder"
+          }`}
+          disabled={!firstname || !email}
           type="submit"
         >
           Inscrever-se
